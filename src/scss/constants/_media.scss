@@ -1,0 +1,10 @@
+$xl: 1200px;
+$lg: 992px;
+$md: 768px;
+$sm: 600px;
+
+@mixin responsive($breakpoint) {
+  @media only screen and (max-width: $breakpoint) {
+    @content;
+  }
+}

@@ -1,5 +1,8 @@
 @use "./constants/fonts" as f;
 @use "./constants/theme" as t;
+@use "./constants/media" as r;
+
+$text-font-size: f.$font-size * 1.5;
 
 @mixin display-flex($justify: center, $align: center) {
   display: flex;
@@ -33,6 +36,12 @@
   }
 }
 
+@mixin responsive-text() {
+  @include r.responsive(r.$md) {
+    font-size: $text-font-size / 1.5;
+  }
+}
+
 body {
   font-size: f.$font-size;
   font-family: f.$font-family;
@@ -43,7 +52,7 @@ body {
 }
 
 #root {
-  width: 100%;
+  min-width: 100%;
   height: 100%;
 }
 
@@ -59,22 +68,28 @@ body {
 
 .title {
   $title-font-size: f.$font-size * 3;
+  @include r.responsive(r.$md) {
+    font-size: $title-font-size / 1.5;
+  }
+  font-size: $title-font-size;
   font-family: f.$title-font-family;
   color: t.$accent;
-  font-size: $title-font-size;
 
   &__text {
     margin-top: 0.5em;
     letter-spacing: 0.25em;
-    @include after-blink($fsize: $title-font-size, $color: t.$light-primary);
   }
 }
 
 .terminal {
+  @include r.responsive(r.$md) {
+    height: 88%;
+  }
   background-color: t.$light-primary;
   width: 91.5%;
+  min-width: 30%;
   height: 80%;
-  margin-top: 2rem;
+  margin-top: 2%;
 
   &__titlebar,
   &__menubar {
@@ -82,24 +97,35 @@ body {
   }
 
   &__titlebar {
-    font-size: f.$font-size * 1.5;
-    border-bottom: 2px solid rgba(t.$really-dark, 0.1);
-    height: 9%;
     @include display-flex;
+    @include responsive-text;
+    @include r.responsive(r.$md) {
+      min-height: 5%;
+    }
+    font-size: $text-font-size;
+    border-bottom: 2px solid rgba(t.$really-dark, 0.1);
+    min-height: 9%;
   }
 
   &__menubar {
-    font-family: f.$title-font-family;
-    height: 6%;
-    padding-inline: 1.5rem;
     @include display-flex($justify: flex-start);
+    @include r.responsive(r.$md) {
+      min-height: 4%;
+      padding-inline: 0.5rem;
+    }
+    font-family: f.$title-font-family;
+    min-height: 6%;
+    padding-inline: 1.5rem;
   }
 
   &__option {
+    @include button-faux-default();
+    @include r.responsive(r.$md) {
+      font-size: f.$font-size / 1.25;
+    }
     color: rgba(t.$really-dark, 0.45);
     height: 99%;
     margin-inline: 0.45rem;
-    @include button-faux-default();
 
     &:hover {
       box-shadow: 0 0.25rem 1rem 0.05rem rgba(black, 0.3);
@@ -107,22 +133,42 @@ body {
 
     &:active {
       transform: translateZ(4px);
+      box-shadow: none;
       background-color: darken(t.$grey, 30%);
     }
   }
 }
 
 .prompt {
-  @include display-flex();
-  font-size: f.$font-size * 1.5;
-  height: 30%;
+  @include display-flex() {
+    gap: 1.5rem;
+  }
+  @include r.responsive(r.$md) {
+    flex-direction: column;
+  }
+  @include responsive-text;
+  padding-block: 1rem;
+  font-size: $text-font-size;
 
   &__button--game,
   &__button--prac {
     @include button-faux-default {
+      @include r.responsive(r.$md) {
+        width: 90%;
+        min-width: 8rem;
+      }
+      width: 15rem;
       padding: 0.75rem;
-      margin-inline: 1.25rem;
+      margin-inline: 2%;
       white-space: nowrap;
+      max-height: 50%;
+    }
+    transition: all ease-in-out 135ms;
+    &:hover {
+      filter: brightness(80%);
+    }
+    &:active {
+      scale: 1.05;
     }
   }
 
@@ -138,10 +184,19 @@ body {
 
   &__text {
     $font-size: f.$font-size * 1.25;
+    @include r.responsive(r.$md) {
+      font-size: f.$font-size;
+    }
+    @include after-blink($fsize: $font-size, $color: t.$accent, $delay: 0.5s) {
+      @include r.responsive(r.$md) {
+        height: f.$font-size;
+        width: f.$font-size / 1.75;
+        margin-top: 1%;
+      }
+    }
     color: t.$accent;
     font-size: $font-size;
     padding-left: 0.5rem;
-    @include after-blink($fsize: $font-size, $color: t.$accent, $delay: 0.5s);
   }
 }
 

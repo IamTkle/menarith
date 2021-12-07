@@ -7,8 +7,45 @@ import "./scss/App.scss";
 
 //const socket = io(SERVER_DOMAIN, { withCredentials: true });
 
+enum GAME_OPTION {
+  FIND_GAME,
+  PRACTICE,
+}
+
+type gameParameters = {
+  mode: "add" | "subtract" | "multiply" | "divide" | "all";
+};
+
+interface GameOptionsState {
+  option?: GAME_OPTION;
+  params?: gameParameters;
+}
+
+type GameOptionsAction = { type: "choose" };
+
+const gameOptionsInitialState: GameOptionsState = {
+  option: undefined,
+  params: undefined,
+};
+
+const gameOptionReducer = (
+  optionState: GameOptionsState,
+  action: GameOptionsAction
+) => {
+  switch (action.type) {
+    case "choose":
+      return { ...optionState, option: GAME_OPTION.FIND_GAME };
+    default:
+      return { ...optionState };
+  }
+};
+
 function App() {
   const [user, setUser] = React.useState("guest1234@menarith:~");
+  const [gameOption, gameOptionDispatcher] = React.useReducer(
+    gameOptionReducer,
+    gameOptionsInitialState
+  );
 
   return (
     <div className="main">
@@ -26,7 +63,11 @@ function App() {
           <button className="prompt__button--game">find game</button>
           <button className="prompt__button--prac">practice</button>
         </div>
-        <span className="prompt__text">{user}</span>
+        <span className="prompt__text">
+          {user}
+
+          <span className="prompt__cursor"></span>
+        </span>
       </div>
     </div>
   );

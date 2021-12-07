@@ -26,7 +26,7 @@ $text-font-size: f.$font-size * 1.5;
     content: "";
     display: inline-block;
     position: absolute;
-    width: $fsize / 1.75;
+    width: calc($fsize / 1.75);
     height: $fsize;
     background-color: $color;
 
@@ -38,7 +38,7 @@ $text-font-size: f.$font-size * 1.5;
 
 @mixin responsive-text() {
   @include r.responsive(r.$md) {
-    font-size: $text-font-size / 1.5;
+    font-size: calc($text-font-size / 1.5);
   }
 }
 
@@ -69,7 +69,7 @@ body {
 .title {
   $title-font-size: f.$font-size * 3;
   @include r.responsive(r.$md) {
-    font-size: $title-font-size / 1.5;
+    font-size: calc($title-font-size / 1.5);
   }
   font-size: $title-font-size;
   font-family: f.$title-font-family;
@@ -121,7 +121,7 @@ body {
   &__option {
     @include button-faux-default();
     @include r.responsive(r.$md) {
-      font-size: f.$font-size / 1.25;
+      font-size: calc(f.$font-size / 1.25);
     }
     color: rgba(t.$really-dark, 0.45);
     height: 99%;
@@ -184,19 +184,25 @@ body {
 
   &__text {
     $font-size: f.$font-size * 1.25;
+    color: t.$accent;
+    font-size: $font-size;
+    padding-left: 0.5rem;
+  }
+
+  &__cursor {
+    $font-size: f.$font-size * 1.25;
+    color: t.$accent;
+    font-size: $font-size;
     @include r.responsive(r.$md) {
       font-size: f.$font-size;
     }
     @include after-blink($fsize: $font-size, $color: t.$accent, $delay: 0.5s) {
       @include r.responsive(r.$md) {
         height: f.$font-size;
-        width: f.$font-size / 1.75;
+        width: calc(f.$font-size / 1.75);
         margin-top: 1%;
       }
     }
-    color: t.$accent;
-    font-size: $font-size;
-    padding-left: 0.5rem;
   }
 }
 

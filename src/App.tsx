@@ -8,6 +8,7 @@ import "./scss/App.scss";
 //const socket = io(SERVER_DOMAIN, { withCredentials: true });
 
 enum GAME_OPTION {
+  NONE,
   FIND_GAME,
   PRACTICE,
 }
@@ -17,14 +18,16 @@ type gameParameters = {
 };
 
 interface GameOptionsState {
-  option?: GAME_OPTION;
+  option: GAME_OPTION;
   params?: gameParameters;
 }
 
-type GameOptionsAction = { type: "choose" };
+type GameOptionsAction = { type: "findGame" | "practice" };
+
+type GameOptionsParams = { difficulty: 1 | 2 | 3 } | { matchmaking: "unrated" | "ranked" } | {mode: "none"} 
 
 const gameOptionsInitialState: GameOptionsState = {
-  option: undefined,
+  option: GAME_OPTION.NONE,
   params: undefined,
 };
 
@@ -33,12 +36,16 @@ const gameOptionReducer = (
   action: GameOptionsAction
 ) => {
   switch (action.type) {
-    case "choose":
+    case "findGame":
       return { ...optionState, option: GAME_OPTION.FIND_GAME };
+    case "practice":
+      return { ...optionState, option: GAME_OPTION.PRACTICE };
     default:
       return { ...optionState };
   }
 };
+
+const paramsArray:GameOptionsParams[] = [{mode: "none"}, {matchmaking: "unrated"}, {difficulty: 1}]
 
 function App() {
   const [user, setUser] = React.useState("guest1234@menarith:~");
@@ -60,13 +67,18 @@ function App() {
           <button className="terminal__option">Settings</button>
         </div>
         <div className="prompt">
-          <button className="prompt__button--game">find game</button>
-          <button className="prompt__button--prac">practice</button>
+          <button onClick={() => gameOptionDispatcher({type: "findGame"})} className="prompt__button--game">find game</button>
+          <button onClick={() => gameOptionDispatcher({type: "practice"})} className="prompt__button--prac">practice</button>
         </div>
         <span className="prompt__text">
           {user}
-
           <span className="prompt__cursor"></span>
+          
+          {gameOption.option !== GAME_OPTION.NONE && <> 
+            {Object.keys(paramsArray[gameOption.option]).map((key) => {
+              return(<span key={gameOption.option}>{key}: {(paramsArray[gameOption.option])[key as keyof GameOptionsParams]} </span>);
+            })}
+          </> }
         </span>
       </div>
     </div>
